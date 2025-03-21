@@ -1,0 +1,39 @@
+# Ignore all JavaScript files
+*.js
+*.js.map
+
+# Ignore TypeScript build output
+*.d.ts
+
+# Ignore node_modules completely
+node_modules/
+
+# Node.js dependencies
+npm-debug.log
+yarn.lock
+package-lock.json
+
+# Build files
+dist/
+build/
+.serverless/
+.webpack/
+.esbuild/
+coverage/
+
+# Serverless Framework
+.serverless
+.slsnext
+serverless-state.json
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs & Temporary files
+logs/
+*.log
+*.tmp
+*.
