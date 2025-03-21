@@ -1,5 +1,5 @@
-import { HubspotService } from "./vendors/hubspot/hubspot.service";
 import { GoogleSheetService } from "./vendors/g-sheet/gsheet.service";
+import { HubspotService } from "./vendors/hubspot/hubspot.service";
 
 export class DealSyncService {
   private hubspotService: HubspotService;
