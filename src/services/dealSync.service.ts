@@ -4,7 +4,7 @@ import { HubspotService } from "./vendors/hubspot/hubspot.service";
 import { WebhookEventType } from "./vendors/hubspot/interface/deal.webhook";
 import sqsService from "./sqs/sqs.service";
 
-export class DealSyncService {
+class DealSyncService {
   logger = new Logger({ serviceName: DealSyncService.name });
   private hubspotService: HubspotService;
   private sheetService: GoogleSheetService;
@@ -68,8 +68,12 @@ export class DealSyncService {
       return;
     }
 
-    if (freshDeal?.isPushedGheet?.toLowerCase() === "no") {
-      this.logger.info(` Deal ${id} exist but No sync G sheet`);
+    const isNotSynced =
+      freshDeal?.isPushedGheet?.toLowerCase() === "no" ||
+      freshDeal?.isPushedGheet === "";
+
+    if (isNotSynced) {
+      this.logger.info(`Deal ${id} exists but is not synced with G Sheet`);
       return;
     }
 
@@ -109,7 +113,11 @@ export class DealSyncService {
     this.logger.info(" Sync completed.");
   }
 
-  public async PushToSQS(hubDeals: WebhookEventType[], sqsUrl: string) {
+  public async PushToSQS(
+    hubDeals: WebhookEventType[],
+    sqs: string = process.env.G_SHEET_SYNC_SQS
+  ) {
+    const sqsUrl = sqs ?? process.env.G_SHEET_SYNC_SQS;
     this.logger.info(`hub deal ids pushed in sqs `);
     const processedDeal = [];
     for (let i = 0; i < hubDeals.length; i++) {
@@ -124,3 +132,6 @@ export class DealSyncService {
     return processedDeal;
   }
 }
+
+const dealSyncService = new DealSyncService();
+export default dealSyncService;

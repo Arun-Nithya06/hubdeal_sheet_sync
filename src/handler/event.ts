@@ -8,7 +8,7 @@ export const hubDealHandler: AWSFunction = {
     {
       http: {
         method: "post",
-        path: "webhook",
+        path: "g-sheet-sync",
       },
     },
   ],

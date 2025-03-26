@@ -34,11 +34,24 @@ const serverlessConfiguration: AWS = {
           },
         ],
       },
+      {
+        Effect: "Allow",
+        Action: [
+          "sqs:ReceiveMessage",
+          "sqs:SendMessage",
+          "sqs:GetQueueAttributes",
+        ],
+        Resource: {
+          "Fn::GetAtt": ["hubspotDealToGSheetSyncSQS", "Arn"],
+        },
+      },
     ],
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
-
+      G_SHEET_SYNC_SQS: {
+        Ref: "hubspotDealToGSheetSyncSQS",
+      },
       // Load credentials from AWS SSM
       G_SHEET_ACCOUNT_TYPE:
         process.env.G_SHEET_ACCOUNT_TYPE || "${ssm:g_sheet_account_type}",
@@ -68,6 +81,9 @@ const serverlessConfiguration: AWS = {
       G_SHEET_SPREADSHEET_ID:
         process.env.G_SHEET_SPREADSHEET_ID || "${ssm:g_sheet_spreadsheet_id}",
       HUBSPOT_API_KEY: process.env.HUBSPOT_API_KEY || "${ssm: hubspot_api_key}",
+      HUBSPOT_CLIENT_SECRET:
+        process.env.HUBSPOT_CLIENT_SECRET || "${ssm: hubspot_client_secret}",
+      ALLOWED_ORIGIN: process.env.ALLOWED_ORIGIN || "${ssm: hubspot_origin}",
     },
   },
 
